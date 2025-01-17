@@ -33,7 +33,7 @@ local_handlers = []
 
 # Executed when add-in is run.
 def start():
-    # Create a command Definition.
+    # ******************************** Create Command Definition ********************************
     cmd_def = ui.commandDefinitions.addButtonDefinition(
         CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER
     )
@@ -41,49 +41,41 @@ def start():
     # Define an event handler for the command created event. It will be called when the button is clicked.
     futil.add_handler(cmd_def.commandCreated, command_created)
 
-    # ******** Add a button into the UI so the user can run the command. ********
+    # **************** Add a button into the UI so the user can run the command. ****************
     # Get the target workspace the button will be created in.
-    workspace = ui.workspaces.itemById(WORKSPACE_ID)
 
-    # Get target toolbar tab for the command.
-    toolbar_tab = workspace.toolbarTabs.itemById(TAB_ID)
+    qat = ui.toolbars.itemById("QATRight")
 
-    # Get target panel for the command and and create the panel if necessary.
-    panel = toolbar_tab.toolbarPanels.itemById(PANEL_ID)
-    if panel is None:
-        panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, PANEL_AFTER, False)
+    if qat.controls.itemById("shareDropMenu") is None:
+        dropDown = qat.controls.addDropDown(
+            "Share Menu", ICON_FOLDER, "shareDropMenu", "UserDisplayNameCommand", True
+        )
+    else:
+        dropDown = qat.controls.itemById("shareDropMenu")
 
-    # Create the button command control in the UI after the specified existing command.
-    control = panel.controls.addCommand(cmd_def, CMD_ID, True)
-
-    # Specify if the command is promoted to the main toolbar.
-    control.isPromoted = IS_PROMOTED
+    # Add a button to toggle the visibility to the end of the panel.
+    control = dropDown.controls.addCommand(cmd_def, "", False)
+    # control.isPromoted = True
 
 
 # Executed when add-in is stopped.
 def stop():
     # Get the various UI elements for this command
-    workspace = ui.workspaces.itemById(WORKSPACE_ID)
-    panel = workspace.toolbarPanels.itemById(PANEL_ID)
-    toolbar_tab = workspace.toolbarTabs.itemById(TAB_ID)
-    command_control = panel.controls.itemById(CMD_ID)
+    qat = ui.toolbars.itemById("QATRight")
+    command_control = qat.controls.itemById(CMD_ID)
     command_definition = ui.commandDefinitions.itemById(CMD_ID)
+    dropDown = qat.controls.itemById("shareMenu")
 
     # Delete the button command control
     if command_control:
         command_control.deleteMe()
 
+    if dropDown:
+        dropDown.deleteMe()
+
     # Delete the command definition
     if command_definition:
         command_definition.deleteMe()
-
-    # Delete the panel if it is empty
-    if panel.controls.count == 0:
-        panel.deleteMe()
-
-    # Delete the tab if it is empty
-    if toolbar_tab.toolbarPanels.count == 0:
-        toolbar_tab.deleteMe()
 
 
 # Function that is called when a user clicks the corresponding button in the UI.
