@@ -48,7 +48,7 @@ def start():
 
     if qat.controls.itemById("shareDropMenu") is None:
         dropDown = qat.controls.addDropDown(
-            "Share Menu", ICON_FOLDER, "shareDropMenu", "UserDisplayNameCommand", True
+            "Share Menu", ICON_FOLDER, "shareDropMenu", "FeaturePacksCommand", True
         )
     else:
         dropDown = qat.controls.itemById("shareDropMenu")

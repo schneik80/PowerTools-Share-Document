@@ -9,7 +9,7 @@ ui = app.userInterface
 # TODO *** Specify the command identity information. ***
 CMD_ID = "cmd_shareSettings"
 CMD_NAME = "Change Share Settings"
-CMD_Description = "Manage this documents share link settings. Settings control if the document can be downloaded or is password protected"
+CMD_Description = "Manage the active document's share link settings. Settings control if the document can be downloaded and is password protected."
 
 # Specify that the command will be promoted to the panel.
 IS_PROMOTED = False
@@ -47,7 +47,7 @@ def start():
 
     if qat.controls.itemById("shareDropMenu") is None:
         dropDown = qat.controls.addDropDown(
-            "Share Menu", ICON_FOLDER, "shareDropMenu", "UserDisplayNameCommand", True
+            "Share Menu", ICON_FOLDER, "shareDropMenu", "FeaturePacksCommand", True
         )
     else:
         dropDown = qat.controls.itemById("shareDropMenu")
