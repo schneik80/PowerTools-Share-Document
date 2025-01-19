@@ -5,12 +5,14 @@
 # You need to use aliases (import "entry" as "my_module") assuming you have the default module named "entry".
 from .shareDocument import entry as shareDocument
 from .shareSettings import entry as shareSettings
+from .shareOpenOnWeb import entry as shareOpenOnWeb
 
 # TODO add your imported modules to this list.
 # Fusion will automatically call the start() and stop() functions.
 commands = [
     shareDocument,
     shareSettings,
+    shareOpenOnWeb,
 ]
 
 
