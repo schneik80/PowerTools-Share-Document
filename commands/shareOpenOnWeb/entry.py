@@ -116,15 +116,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
         )
         return
 
-    if isShareAllowed is False:
-        ui.messageBox(
-            "Sharing is not allowed.\nPlease check if your Team Hub Administrator has disabled sharing",
-            "Share Settings",
-            0,
-            2,
-        )
-        return
-
     try:
 
         cmdDefs = ui.commandDefinitions
