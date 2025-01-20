@@ -6,7 +6,7 @@ from ... import config
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-# TODO *** Specify the command identity information. ***
+# Specify the command identity information. ***
 CMD_ID = "cmd_shareOpenOnWeb"
 CMD_NAME = "Open on the web"
 CMD_Description = (
@@ -102,7 +102,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Execute Event")
 
-    # TODO ******************************** Your code here ********************************
+    # ******************************** Your code here ********************************
 
     shareCmdDef = ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")
     isShareAllowed = shareCmdDef.controlDefinition.isEnabled

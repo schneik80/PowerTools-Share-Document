@@ -1,13 +1,13 @@
 # Here you define the commands that will be added to your add-in.
 
-# TODO Import the modules corresponding to the commands you created.
+# Import the modules corresponding to the commands you created.
 # If you want to add an additional command, duplicate one of the existing directories and import it here.
 # You need to use aliases (import "entry" as "my_module") assuming you have the default module named "entry".
 from .shareDocument import entry as shareDocument
 from .shareSettings import entry as shareSettings
 from .shareOpenOnWeb import entry as shareOpenOnWeb
 
-# TODO add your imported modules to this list.
+# add your imported modules to this list.
 # Fusion will automatically call the start() and stop() functions.
 commands = [
     shareDocument,

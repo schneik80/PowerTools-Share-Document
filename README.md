@@ -15,10 +15,9 @@ The share message will display additional information as needed:
 - If download is enabled for the shared document.
 - If the document has external references, information on if the references can be downloaded or only viewed is also noted.
 
-
 **Change Share Settings** allows you to adjust the active documents share settings from the same menu.
 
-**open on web**
+**Open on Web** opens the active document's details page in Fusion Team web client.
 
 Settings control:
 
