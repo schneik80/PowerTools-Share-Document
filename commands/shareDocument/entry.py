@@ -129,6 +129,12 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     try:
         shareState = app.activeDocument.dataFile.sharedLink
+        
+        # remember if the document was already shared.
+        if shareState.isShared == True:
+            wasShared = True
+
+        # show a progress bar
         progressBar = ui.progressBar
 
         # Check if the document is shared
@@ -156,7 +162,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
         # Copy the shared link to the clipboard
         clipboardText(shareLink)
 
-        resultString = f"<b>Document is shared.</b> <br> Share link: <a href=''{shareLink}''>{shareLink}</a> was added to clipboard."
+        resultString = f"<b>Document is now shared.</b> <br> Share link: <a href=''{shareLink}''>{shareLink}</a> was added to clipboard.<br>Note: the document does not have a password."
         # Display a link to the user
         ui.messageBox(
             resultString,
