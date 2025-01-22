@@ -6,7 +6,7 @@ from ... import config
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-# TODO *** Specify the command identity information. ***
+# Specify the command identity information.
 CMD_ID = "cmd_shareDocument"
 CMD_NAME = "Get a Share Link"
 CMD_Description = "Share active Document and copy the link to the clipboard."
@@ -107,7 +107,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     shareCmdDef = ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")
     isShareAllowed = shareCmdDef.controlDefinition.isEnabled
 
-    if app.activeDocument.isSaved == False:
+    if not app.activeDocument.isSaved:
         ui.messageBox(
             "Can not share an unsaved document\nPlease Save the Document.",
             "Share Document",
@@ -116,9 +116,9 @@ def command_execute(args: adsk.core.CommandEventArgs):
         )
         return
 
-    if isShareAllowed is False:
+    if not isShareAllowed:
         permLink = app.activeDocument.designDataFile.fusionWebURL
-        clipboardText(permLink)
+        futil.clipText(permLink)
         ui.messageBox(
             f"Sharing is not allowed. Please check if your Team Hub Administrator has disabled sharing.<br><br>A private perma-link was copied to clipboard instead. This link will only allow Team hub members access to the document details page.",
             "Share Document",
@@ -160,14 +160,14 @@ def command_execute(args: adsk.core.CommandEventArgs):
             exit(0)
 
         # Copy the shared link to the clipboard
-        clipboardText(shareLink)
+        futil.clipText(shareLink)
 
         if wasShared == True:
             resultString = f"Document is already shared <br>"
         else:
             resultString = f"<b>Document is now shared.</b> <br>"
 
-        resultString += f"< Share link: <a href=''{shareLink}''>{shareLink}</a> was added to clipboard.<br><br>Note:"
+        resultString += f"A <b>Share link</b> for {app.activeDocument.name}: <a href=''{shareLink}''>{shareLink}</a> was added to the clipboard.<br><br>Note:"
 
         if shareState.isDownloadAllowed == False:
             noDownload = True
@@ -195,13 +195,13 @@ def command_execute(args: adsk.core.CommandEventArgs):
             rootComp = app.activeProduct.rootComponent
 
             if has_external_child_reference(rootComp):
-                futil.log(f"{CMD_NAME} Document has external reference")
+                futil.log(f"{CMD_NAME} Document has external references")
                 if noDownload == True:
-                    resultString += f"<br>This design has external references for one or more designs. Sharing this design will allow the referenced designs to be viewed but not downloaded. <br>"
+                    resultString += f"<br>This design has external references. Sharing this design will allow the referenced designs to be viewed but not downloaded. <br>"
                 else:
-                    resultString += f"<br>This design has external references for one or more designs. Sharing this design will also share the referenced designs. To avoid sharing referenced designs, either save this design as a new document and break link or disable download.<br>"
+                    resultString += f"<br>This design has external references. Sharing this design will also share the referenced designs. To avoid sharing referenced designs, either save this design as a new document and break link or disable download.<br>"
             else:
-                futil.log(f"{CMD_NAME} Document has no external reference")
+                futil.log(f"{CMD_NAME} Document has no external references")
 
         # Hide the progress bar
         progressBar.hide()
@@ -217,15 +217,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
     except:
         # Write the error message to the TEXT COMMANDS window.
         app.log(f"Failed:\n{traceback.format_exc()}")
-
-
-def clipboardText(linkText):
-
-    if os.name == "nt":
-        os.system(f"echo {linkText.strip()} | clip")
-    else:
-        os.system(f'echo "{linkText.strip()}" | pbcopy')
-    app.log(f"link: {linkText} was added to clipboard")
 
 
 def has_external_child_reference(component: adsk.fusion.Component) -> bool:
