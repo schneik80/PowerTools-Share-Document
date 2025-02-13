@@ -8,7 +8,7 @@ app = adsk.core.Application.get()
 ui = app.userInterface
 
 # Specify the command identity information.
-CMD_ID = "cmd_shareOpenDesktop"
+CMD_ID = "PTSHD_shareopenondesktop"
 CMD_NAME = "Get Open on Desktop Link"
 CMD_Description = "Get a link on the clipboard for the active document that can be shared with your team to directly open the document for edit in their Fusion desktop client."
 
@@ -25,7 +25,15 @@ PANEL_NAME = config.my_panel_name
 PANEL_AFTER = config.my_panel_after
 
 # Resource location for command icons, here we assume a sub folder in this directory named "resources".
-ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
+Theme = app.preferences.generalPreferences.userInterfaceTheme
+if Theme == 0:
+    ICON_FOLDER = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "resources", ""
+    )
+else:
+    ICON_FOLDER = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "resources/dark", ""
+    )
 
 # Local list of event handlers used to maintain a reference so
 # they are not released and garbage collected.
@@ -55,7 +63,7 @@ def start():
         dropDown = qat.controls.itemById("shareDropMenu")
 
     # Add a button to toggle the visibility to the end of the panel.
-    control = dropDown.controls.addCommand(cmd_def, "cmd_shareSettings", True)
+    control = dropDown.controls.addCommand(cmd_def, "PTSHD_sharesettings", True)
     # control.isPromoted = True
 
 

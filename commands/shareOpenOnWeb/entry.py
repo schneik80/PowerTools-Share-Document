@@ -7,7 +7,7 @@ app = adsk.core.Application.get()
 ui = app.userInterface
 
 # Specify the command identity information. ***
-CMD_ID = "cmd_shareOpenOnWeb"
+CMD_ID = "PTSHD_shareopenonweb"
 CMD_NAME = "Open on the web"
 CMD_Description = (
     "Open the active document in Fusion Team client on the web in your default browser"
@@ -26,7 +26,15 @@ PANEL_NAME = config.my_panel_name
 PANEL_AFTER = config.my_panel_after
 
 # Resource location for command icons, here we assume a sub folder in this directory named "resources".
-ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
+Theme = app.preferences.generalPreferences.userInterfaceTheme
+if Theme == 0:
+    ICON_FOLDER = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "resources", ""
+    )
+else:
+    ICON_FOLDER = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "resources/dark", ""
+    )
 
 # Local list of event handlers used to maintain a reference so
 # they are not released and garbage collected.
