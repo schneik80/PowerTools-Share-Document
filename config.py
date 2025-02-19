@@ -15,8 +15,8 @@ COMPANY_NAME = "Autodesk"
 
 design_workspace = "FusionSolidEnvironment"
 tools_tab_id = "SolidTab"
-my_tab_name = "Share Tools"
+my_tab_name = "Power Tools"
 
-my_panel_id = f"{ADDIN_NAME}_panel"
-my_panel_name = "Share"
+my_panel_id = f"PT_{my_tab_name}"
+my_panel_name = "Power Tools"
 my_panel_after = ""
