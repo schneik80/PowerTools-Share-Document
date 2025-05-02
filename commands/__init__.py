@@ -5,13 +5,17 @@
 # You need to use aliases (import "entry" as "my_module") assuming you have the default module named "entry".
 from .shareDocument import entry as shareDocument
 from .shareSettings import entry as shareSettings
-from .shareOpenDesktop import entry as shareOpenDesktop
+from .projectOpenDesktop import entry as projectOpenDesktop
+from .projectInvite import entry as projectInvite
+from .projectMembers import entry as projectMembers
 
 # Fusion will automatically call the start() and stop() functions.
 commands = [
     shareDocument,
     shareSettings,
-    shareOpenDesktop,
+    projectOpenDesktop,
+    projectInvite,
+    projectMembers,
 ]
 
 
