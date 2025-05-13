@@ -4,6 +4,9 @@
 
 Sharing is core to collaborative design. The Share Menu makes it easier to access sharing tools.
 
+![image](https://github.com/user-attachments/assets/d7a4c0a0-f2ba-4fb4-aacc-4d221eb61475)
+
+
 **Get Share Link** enables sharing, generates a public share link with Downloads enabled and then copies the link to the system clipboard. You can then paste into text or emails to quickly share the document.
 
 Note:
