@@ -8,9 +8,9 @@ app = adsk.core.Application.get()
 ui = app.userInterface
 
 # Specify the command identity information.
-CMD_ID = "PTSHD_shareopenondesktop"
-CMD_NAME = "Get Open on Desktop Link"
-CMD_Description = "Get a link on the clipboard for the active document that can be shared with your team to directly open the document for edit in their Fusion desktop client."
+CMD_ID = "PTSHD_shareopeninteam"
+CMD_NAME = "Get Open in Team Link"
+CMD_Description = "Get a link on the clipboard for the active document that can be shared with your team to open the document for review in Fusion Team web client."
 
 # Specify that the command will be promoted to the panel.
 IS_PROMOTED = False
@@ -56,7 +56,7 @@ def start():
         dropDown = qat.controls.itemById("shareDropMenu")
 
     # Add a button to toggle the visibility to the end of the panel.
-    control = dropDown.controls.addCommand(cmd_def, "PTSHD_sharesettings", True)
+    control = dropDown.controls.addCommand(cmd_def, "", False)
     # control.isPromoted = True
 
 
@@ -116,29 +116,20 @@ def command_execute(args: adsk.core.CommandEventArgs):
     try:
         # show a progress bar
         progressBar = ui.progressBar
-        progressBar.showBusy("Generating Share Link"),
+        progressBar.showBusy("Generating Fusion Team Link"),
 
         # Generate the share link
-        shareLink = f"fusion360://lineageUrn="
-        shareLink += quote(app.activeDocument.dataFile.id)
-
-        shareLink += "&hubUrl="
-        galilleoUrl = app.activeDocument.dataFile.parentProject.parentHub.fusionWebURL
-        stripGalilleo = galilleoUrl.replace(" ", "").rstrip(galilleoUrl[-3:]).upper()
-        shareLink += quote(stripGalilleo)
-
-        shareLink += "&documentName="
-        shareLink += quote(app.activeDocument.name)
+        shareLink = app.activeDocument.dataFile.fusionWebURL
 
         # output the URL to the text commands
         futil.log(
-            f"{CMD_NAME} Open on Desktop Document Link: {shareLink} was added to the clipboard."
+            f"{CMD_NAME} Open in Team Link: {shareLink} was added to the clipboard."
         )
 
         # Copy the shared link to the clipboard
         futil.clipText(shareLink)
 
-        resultString = f"An <b>Open on Desktop</b> link for {app.activeDocument.name} was added to the clipboard."
+        resultString = f"An <b>Open in Team</b> link for {app.activeDocument.name} was added to the clipboard."
 
         if app.activeProduct.productType == "DesignProductType":
             rootComp = app.activeProduct.rootComponent

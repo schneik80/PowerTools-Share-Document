@@ -5,7 +5,8 @@
 # You need to use aliases (import "entry" as "my_module") assuming you have the default module named "entry".
 from .shareDocument import entry as shareDocument
 from .shareSettings import entry as shareSettings
-from .projectOpenDesktop import entry as projectOpenDesktop
+from .OpenDesktop import entry as OpenDesktop
+from .OpenInTeam import entry as openInTeam
 from .projectInvite import entry as projectInvite
 from .projectMembers import entry as projectMembers
 
@@ -13,7 +14,8 @@ from .projectMembers import entry as projectMembers
 commands = [
     shareDocument,
     shareSettings,
-    projectOpenDesktop,
+    OpenDesktop,
+    openInTeam,
     projectInvite,
     projectMembers,
 ]

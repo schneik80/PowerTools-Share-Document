@@ -1,15 +1,16 @@
 import adsk.core, adsk.fusion
 import os, traceback
+from urllib.parse import quote
 from ...lib import fusionAddInUtils as futil
 from ... import config
 
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-# Specify the command identity information. ***
-CMD_ID = "PTSHD_sharesettings"
-CMD_NAME = "Change Share Settings"
-CMD_Description = "Manage the active document's share link settings. Settings control if the document can be downloaded and is password protected."
+# Specify the command identity information.
+CMD_ID = "PTSHD_shareopenondesktop"
+CMD_NAME = "Get Open on Desktop Link"
+CMD_Description = "Get a link on the clipboard for the active document that can be shared with your team to directly open the document for edit in their Fusion desktop client."
 
 # Specify that the command will be promoted to the panel.
 IS_PROMOTED = False
@@ -22,6 +23,7 @@ TAB_NAME = config.my_tab_name
 PANEL_ID = config.my_panel_id
 PANEL_NAME = config.my_panel_name
 PANEL_AFTER = config.my_panel_after
+
 
 # Resource location for command icons, here we assume a sub folder in this directory named "resources".
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
@@ -42,6 +44,7 @@ def start():
     futil.add_handler(cmd_def.commandCreated, command_created)
 
     # **************** Add a button into the UI so the user can run the command. ****************
+    # Get the target workspace the button will be created in.
 
     qat = ui.toolbars.itemById("QATRight")
 
@@ -52,7 +55,9 @@ def start():
     else:
         dropDown = qat.controls.itemById("shareDropMenu")
 
-    control = dropDown.controls.addCommand(cmd_def, "PTSHD_projectInvite", False)
+    # Add a button to toggle the visibility to the end of the panel.
+    control = dropDown.controls.addCommand(cmd_def, "", False)
+    # control.isPromoted = True
 
 
 # Executed when add-in is stopped.
@@ -61,7 +66,7 @@ def stop():
     qat = ui.toolbars.itemById("QATRight")
     command_control = qat.controls.itemById(CMD_ID)
     command_definition = ui.commandDefinitions.itemById(CMD_ID)
-    dropDown = qat.controls.itemById("shareDropMenu")
+    dropDown = qat.controls.itemById("shareMenu")
 
     # Delete the button command control
     if command_control:
@@ -99,38 +104,75 @@ def command_execute(args: adsk.core.CommandEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Execute Event")
 
-    # ******************************* Your code here ********************************
-
-    shareCmdDef = ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")
-    isShareAllowed = shareCmdDef.controlDefinition.isEnabled
-
-    if app.activeDocument.isSaved == False:
+    if not app.activeDocument.isSaved:
         ui.messageBox(
-            "Can not edit share settings for an unsaved document\nPlease Save the Document.",
-            "Share Settings",
-            0,
-            2,
-        )
-        return
-
-    if isShareAllowed is False:
-        ui.messageBox(
-            "Sharing is not allowed.\nPlease check if your Team Hub Administrator has disabled sharing",
-            "Share Settings",
+            "Can not get <b>Open on Desktop</b> link for an unsaved document\nPlease Save the Document.",
+            "Get Open on Desktop Link",
             0,
             2,
         )
         return
 
     try:
+        # show a progress bar
+        progressBar = ui.progressBar
+        progressBar.showBusy("Generating Share Link"),
 
-        cmdDefs = ui.commandDefinitions
-        showShareSettings = cmdDefs.itemById("SimpleSharingPublicLinkCommand")
-        showShareSettings.execute()
+        # Generate the share link
+        shareLink = f"fusion360://lineageUrn="
+        shareLink += quote(app.activeDocument.dataFile.id)
+
+        shareLink += "&hubUrl="
+        galilleoUrl = app.activeDocument.dataFile.parentProject.parentHub.fusionWebURL
+        stripGalilleo = galilleoUrl.replace(" ", "").rstrip(galilleoUrl[-3:]).upper()
+        shareLink += quote(stripGalilleo)
+
+        shareLink += "&documentName="
+        shareLink += quote(app.activeDocument.name)
+
+        # output the URL to the text commands
+        futil.log(
+            f"{CMD_NAME} Open on Desktop Document Link: {shareLink} was added to the clipboard."
+        )
+
+        # Copy the shared link to the clipboard
+        futil.clipText(shareLink)
+
+        resultString = f"An <b>Open on Desktop</b> link for {app.activeDocument.name} was added to the clipboard."
+
+        if app.activeProduct.productType == "DesignProductType":
+            rootComp = app.activeProduct.rootComponent
+
+            if has_external_child_reference(rootComp):
+                futil.log(f"{CMD_NAME} Document has external references")
+                resultString += f"<br><br>Note:<br>This design has external references. Sharing this design will may share the referenced designs depending on the team member's permissions."
+            else:
+                futil.log(f"{CMD_NAME} Document has no external references")
+
+        # Hide the progress bar
+        progressBar.hide()
+
+        # Display the message to the user
+        ui.messageBox(
+            resultString,
+            "Share Document",
+            0,
+            2,
+        )
 
     except:
         # Write the error message to the TEXT COMMANDS window.
         app.log(f"Failed:\n{traceback.format_exc()}")
+
+
+def has_external_child_reference(component: adsk.fusion.Component) -> bool:
+    for occurrence in component.occurrences:
+        if occurrence.isReferencedComponent:
+            return True
+        # Recursively check child components
+        if has_external_child_reference(occurrence.component):
+            return True
+    return False
 
 
 # This event handler is called when the command terminates.
