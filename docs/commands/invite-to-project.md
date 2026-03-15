@@ -101,3 +101,7 @@ The add-in derives the invite URL from `dataFile.fusionWebURL`, which points to 
 
 - [Document Project Members](document-project-members.md) — View all current members and their access levels.
 - [Get a Share Link](get-a-share-link.md) — Share the document publicly without adding project members.
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

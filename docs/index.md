@@ -30,3 +30,7 @@ This folder contains detailed end-user and developer documentation for the **Sha
 - For **getting started** with installation and basic use, see the [README](../README.md).
 - For **troubleshooting**, see the [Troubleshooting section](../README.md#troubleshooting) in the README.
 - For **contributing**, see the [Contributing section](../README.md#contributing) in the README.
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

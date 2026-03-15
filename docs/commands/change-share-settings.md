@@ -96,3 +96,7 @@ flowchart TD
 - [Get a Share Link](get-a-share-link.md) — Enable sharing and copy the share link to the clipboard.
 - [Get Open on Desktop Link](get-open-on-desktop-link.md) — Generate a link that opens the document for editing in Fusion.
 - [Get Open in Team Link](get-open-in-team-link.md) — Generate a link that opens the document in the Fusion Team web viewer.
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

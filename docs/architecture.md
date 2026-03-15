@@ -250,3 +250,7 @@ PowerTools-Share-Document/
         ├── get-open-on-desktop-link.md
         └── get-open-in-team-link.md
 ```
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

@@ -395,3 +395,7 @@ Set `DEBUG = True` in [config.py](config.py) during development to enable verbos
 ## License
 
 This project is released under the [MIT License](LICENSE).
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

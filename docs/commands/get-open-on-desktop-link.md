@@ -130,3 +130,7 @@ flowchart TD
 - [Get Open in Team Link](get-open-in-team-link.md) — Generate a browser link for review without requiring a Fusion installation.
 - [Get a Share Link](get-a-share-link.md) — Generate a public share link suitable for external reviewers.
 - [Change Share Settings](change-share-settings.md) — Control download permissions and password protection for the public share link.
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

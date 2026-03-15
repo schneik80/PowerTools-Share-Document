@@ -115,3 +115,7 @@ flowchart TD
 - [Get Open on Desktop Link](get-open-on-desktop-link.md) — Generate a `fusion360://` link for recipients who need editing access in the Fusion desktop application.
 - [Get a Share Link](get-a-share-link.md) — Generate a public share link accessible without Hub membership.
 - [Document Project Members](document-project-members.md) — Review who has Hub access to view this link.
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*

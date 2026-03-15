@@ -114,3 +114,7 @@ This pattern is identical to [Invite to Project](invite-to-project.md), but uses
 
 - [Invite to Project](invite-to-project.md) — Send invitations to add new members to the project.
 - [Get a Share Link](get-a-share-link.md) — Share the document publicly without modifying project membership.
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*
