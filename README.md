@@ -22,6 +22,7 @@ The **Share Menu** add-in for Autodesk Fusion consolidates all document-sharing 
   - [System context](#system-context)
   - [Add-in component diagram](#add-in-component-diagram)
   - [Command flows](#command-flows)
+- [Detailed documentation](#detailed-documentation)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
@@ -346,6 +347,22 @@ flowchart TD
     F --> G
     G --> H[Show confirmation dialog]
 ```
+
+---
+
+## Detailed documentation
+
+The [docs](docs/index.md) folder contains comprehensive per-command reference pages and the full architecture guide, including additional C4 diagrams and API surface tables.
+
+| Document | Description |
+|---|---|
+| [Get a Share Link](docs/commands/get-a-share-link.md) | End-user guide, result dialog reference, API surface, and command flow diagram |
+| [Change Share Settings](docs/commands/change-share-settings.md) | End-user guide, available settings reference, and command flow diagram |
+| [Invite to Project](docs/commands/invite-to-project.md) | End-user guide, URL construction details, and command flow diagram |
+| [Document Project Members](docs/commands/document-project-members.md) | End-user guide, capabilities reference, and command flow diagram |
+| [Get Open on Desktop Link](docs/commands/get-open-on-desktop-link.md) | End-user guide, link format reference, and command flow diagram |
+| [Get Open in Team Link](docs/commands/get-open-in-team-link.md) | End-user guide, comparison with Open on Desktop, and command flow diagram |
+| [Architecture](docs/architecture.md) | System context, component structure, lifecycle, execution model, and utility library reference |
 
 ---
 
