@@ -4,7 +4,7 @@
 	"id":	"7299b105-f728-4269-9f11-4711cd5974e0",
 	"author":	"schneik",
 	"description":	{
-		"":	""
+		"":	"Share Menu add-in for Autodesk Fusion. Consolidates document sharing tools — public share links, share settings, Open on Desktop links, Open in Team links, project invite, and project members management — into a single drop-down menu in the right Quick Access Toolbar."
 	},
 	"version":	"1.0",
 	"runOnStartup":	true,
