@@ -2,15 +2,13 @@
 
 ## Description
 
-Sharing is core to collaborative design. The Share Menu makes it easier to access sharing tools in the upper left of th application UI. this is a common location to access asharing tools in applications.
-By consolidating sharing tools into one menu you can cimplify the steps needed to colaborate. Rahter than hunt through multiple different locations, not access them in one place.
+Sharing is core to collaborative design. The Share Menu makes it easier to access sharing tools in the upper left of the application UI. This is a common location to access sharing tools in applications. By consolidating sharing tools into one menu you can simplify the steps needed to colaborate. Rahter than hunt through multiple different locations, now access them in one place.
 
 ![image](https://github.com/user-attachments/assets/d7a4c0a0-f2ba-4fb4-aacc-4d221eb61475)
 
-
 ### Get Share Link
 
-Enable sharing and generates a public share link with Downloads enabled and then copies the link to the system clipboard. You can then paste into text or emails to quickly share the document.
+Enable sharing and generate a public share link with download enabled, then copies the link to the system clipboard. You can paste into text or emails to quickly share the document.
 
 Note:
 The document must be saved, and your Fusion Team Hub must have enabled share links for sharing to work. If sharing is disabled, a private permalink will be copied to clipboard instead. This link will only allow Team hub members access to the document details page.
