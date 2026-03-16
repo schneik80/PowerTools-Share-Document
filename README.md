@@ -1,4 +1,4 @@
-# Share Menu — PowerTools for Autodesk Fusion
+# PowerTools: Share Menu for Autodesk Fusion
 
 The **Share Menu** add-in for Autodesk Fusion consolidates all document-sharing tools into a single, consistent drop-down menu in the right Quick Access Toolbar (QAT). This placement mirrors the convention used by modern productivity applications and reduces the steps required to collaborate. Instead of navigating multiple locations, you access every sharing action from one place.
 
