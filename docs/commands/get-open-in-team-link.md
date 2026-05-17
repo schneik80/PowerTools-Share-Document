@@ -103,7 +103,7 @@ flowchart TD
 
 | API element | Purpose |
 |---|---|
-| `app.activeDocument.isSaved` | Guards against operating on unsaved documents |
+| `futil.isSaved()` | Guards against operating on unsaved documents (checks `app.activeDocument.isSaved`; shows a "Please Save" prompt if not) |
 | `app.activeDocument.dataFile.fusionWebURL` | The Fusion Team URL for the active document |
 | `futil.clipText(text)` | Copies the link to the system clipboard |
 | `has_external_child_reference(component)` | Recursive function that checks the component tree for linked external files |

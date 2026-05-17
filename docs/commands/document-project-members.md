@@ -103,7 +103,7 @@ This pattern is identical to [Invite to Project](invite-to-project.md), but uses
 
 | API element | Purpose |
 |---|---|
-| `app.activeDocument.isSaved` | Guards against operating on unsaved documents |
+| `futil.isSaved()` | Guards against operating on unsaved documents (checks `app.activeDocument.isSaved`; shows a "Please Save" prompt if not) |
 | `app.activeDocument.dataFile.fusionWebURL` | Base URL used to construct the members page URL |
 | `urllib.parse.quote` / `urllib.parse.unquote` | URL encoding and decoding during path manipulation |
 | `webbrowser.open(url)` | Opens the constructed URL in the system default browser |

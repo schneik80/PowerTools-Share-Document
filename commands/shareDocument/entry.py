@@ -2,7 +2,7 @@
 # Copyright (C) 2022-2026 IMA LLC
 
 import adsk.core, adsk.fusion
-import os, traceback
+import os
 from ...lib import fusionAddInUtils as futil
 from ... import config
 
@@ -110,13 +110,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     shareCmdDef = ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")
     isShareAllowed = shareCmdDef.controlDefinition.isEnabled
 
-    if not app.activeDocument.isSaved:
-        ui.messageBox(
-            "Can not share an unsaved document\nPlease Save the Document.",
-            "Share Document",
-            0,
-            2,
-        )
+    if not futil.isSaved():
         return
 
     if not isShareAllowed:
@@ -153,7 +147,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
         shareLink = shareState.linkURL
 
         if shareLink == "":
-            app.log(f"Failed to get a link to the document")
+            futil.log("Failed to get a link to the document")
             ui.messageBox(
                 f"Failed to share the document.",
                 "Share Document",
@@ -219,7 +213,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     except:
         # Write the error message to the TEXT COMMANDS window.
-        app.log(f"Failed:\n{traceback.format_exc()}")
+        futil.handle_error(CMD_NAME)
 
 
 def has_external_child_reference(component: adsk.fusion.Component) -> bool:

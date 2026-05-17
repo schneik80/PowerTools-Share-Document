@@ -100,7 +100,7 @@ flowchart TD
 | API element | Purpose |
 |---|---|
 | `ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")` | Checks whether sharing is enabled for this Hub |
-| `app.activeDocument.isSaved` | Guards against operating on unsaved documents |
+| `futil.isSaved()` | Guards against operating on unsaved documents (checks `app.activeDocument.isSaved`; shows a "Please Save" prompt if not) |
 | `app.activeDocument.dataFile.sharedLink` | Returns the `SharedLink` object for reading and setting share state |
 | `sharedLink.isShared` | Reads or sets the sharing enabled state |
 | `sharedLink.linkURL` | The public share URL |

@@ -2,7 +2,7 @@
 # Copyright (C) 2022-2026 IMA LLC
 
 import adsk.core, adsk.fusion
-import os, traceback
+import os
 import urllib, webbrowser
 from urllib.parse import quote
 from ...lib import fusionAddInUtils as futil
@@ -110,13 +110,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Execute Event")
 
-    if not app.activeDocument.isSaved:
-        ui.messageBox(
-            "Can not invite members to document's project for an unsaved document\nPlease Save the Document.",
-            "Invite to project",
-            0,
-            2,
-        )
+    if not futil.isSaved():
         return
 
     try:
@@ -144,7 +138,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     except:
         # Write the error message to the TEXT COMMANDS window.
-        app.log(f"Failed:\n{traceback.format_exc()}")
+        futil.handle_error(CMD_NAME)
 
 
 # This event handler is called when the command terminates.
