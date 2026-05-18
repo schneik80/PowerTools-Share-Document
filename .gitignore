@@ -158,3 +158,9 @@ data.json
 hub.json
 commands/relateddata/docs.json
 commands/relateddata/data.json
+
+# Cache folders
+cache/
+.claude/
+.cursor/rules/
+.github/
