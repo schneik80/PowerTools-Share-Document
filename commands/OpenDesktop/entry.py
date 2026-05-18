@@ -2,7 +2,7 @@
 # Copyright (C) 2022-2026 IMA LLC
 
 import adsk.core, adsk.fusion
-import os, traceback
+import os
 from urllib.parse import quote
 from ...lib import fusionAddInUtils as futil
 from ... import config
@@ -107,13 +107,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Execute Event")
 
-    if not app.activeDocument.isSaved:
-        ui.messageBox(
-            "Can not get <b>Open on Desktop</b> link for an unsaved document\nPlease Save the Document.",
-            "Get Open on Desktop Link",
-            0,
-            2,
-        )
+    if not futil.isSaved():
         return
 
     try:
@@ -165,7 +159,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     except:
         # Write the error message to the TEXT COMMANDS window.
-        app.log(f"Failed:\n{traceback.format_exc()}")
+        futil.handle_error(CMD_NAME)
 
 
 def has_external_child_reference(component: adsk.fusion.Component) -> bool:

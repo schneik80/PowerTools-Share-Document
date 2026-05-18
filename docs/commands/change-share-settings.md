@@ -86,7 +86,7 @@ flowchart TD
 |---|---|
 | `ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")` | Retrieves the native Fusion share command and checks whether sharing is enabled |
 | `controlDefinition.isEnabled` | Reflects the Hub administrator's sharing policy |
-| `app.activeDocument.isSaved` | Guards against operating on unsaved documents |
+| `futil.isSaved()` | Guards against operating on unsaved documents (checks `app.activeDocument.isSaved`; shows a "Please Save" prompt if not) |
 | `commandDefinitions.itemById("SimpleSharingPublicLinkCommand").execute()` | Opens the native Fusion share settings dialog |
 
 ---

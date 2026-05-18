@@ -242,7 +242,7 @@ C4Component
         Component(projectInvite, "projectInvite/entry.py", "Command module", "Invite to Project")
         Component(projectMembers, "projectMembers/entry.py", "Command module", "Document Project Members")
 
-        Component(futil, "lib/fusionAddInUtils", "Utility library", "Logging, clipboard copy, and event handler utilities")
+        Component(futil, "lib/fusionAddInUtils", "Utility library", "Shared package vendored across all 9 PowerTools add-ins: DEBUG-gated logging, clipboard, isSaved, error handling, event handlers (this add-in's main uses), plus attribute/cache/date/log/upload helpers")
     }
 
     Rel(entry, cmdInit, "Delegates start/stop lifecycle")
@@ -398,7 +398,7 @@ This project is released under the [GNU General Public License v3.0 or later](LI
 
 Copyright (C) 2022-2026 IMA LLC.
 
-The vendored library at `lib/fusionAddInUtils` is Autodesk sample code and is distributed under its own license terms; see its source headers for details.
+The shared library at `lib/fusionAddInUtils` is vendored byte-for-byte identically across all nine PowerTools add-ins. It mixes code under different terms: `general_utils.py`, `event_utils.py`, and `attributes_utils.py` are based on Autodesk, Inc. sample code (distributed under its own license terms — see the source headers); `cache_utils.py`, `date_utils.py`, `log_utils.py`, and `upload_utils.py` are part of this project (IMA LLC, GPL-3.0-or-later). See each module's source header for details.
 
 ---
 

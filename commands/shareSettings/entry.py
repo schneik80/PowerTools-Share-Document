@@ -2,7 +2,7 @@
 # Copyright (C) 2022-2026 IMA LLC
 
 import adsk.core, adsk.fusion
-import os, traceback
+import os
 from ...lib import fusionAddInUtils as futil
 from ... import config
 
@@ -107,13 +107,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     shareCmdDef = ui.commandDefinitions.itemById("SimpleSharingPublicLinkCommand")
     isShareAllowed = shareCmdDef.controlDefinition.isEnabled
 
-    if app.activeDocument.isSaved == False:
-        ui.messageBox(
-            "Can not edit share settings for an unsaved document\nPlease Save the Document.",
-            "Share Settings",
-            0,
-            2,
-        )
+    if not futil.isSaved():
         return
 
     if isShareAllowed is False:
@@ -133,7 +127,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     except:
         # Write the error message to the TEXT COMMANDS window.
-        app.log(f"Failed:\n{traceback.format_exc()}")
+        futil.handle_error(CMD_NAME)
 
 
 # This event handler is called when the command terminates.

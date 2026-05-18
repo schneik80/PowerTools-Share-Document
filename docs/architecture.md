@@ -16,6 +16,7 @@ This document describes the internal structure and runtime behavior of the **Sha
   - [Utility library](#utility-library)
     - [`general_utils.py`](#general_utilspy)
     - [`event_utils.py`](#event_utilspy)
+    - [Other shared modules (vendored for parity)](#other-shared-modules-vendored-for-parity)
   - [Configuration module](#configuration-module)
   - [File structure reference](#file-structure-reference)
 
@@ -177,15 +178,23 @@ sequenceDiagram
 
 ## Utility library
 
-The `lib/fusionAddInUtils/` package provides three shared utilities used by all command modules:
+The `lib/fusionAddInUtils/` package is **vendored byte-for-byte identically
+across all nine PowerTools add-ins** (Addinmarket, Assembly, Document-Tools,
+Exports, Onshape-Import, Part-Modeling, PlusProject, Related-Data,
+Share-Document). Any change to a module must be replicated into all nine
+copies so the package stays in sync. Share-Document itself only exercises the
+`general_utils` and `event_utils` helpers; the remaining modules are present
+for parity and may be unused by this add-in.
 
 ### `general_utils.py`
 
 | Function | Signature | Description |
 |---|---|---|
-| `log` | `log(message, level, force_console)` | Writes a message to the Python console and, when `DEBUG=True` or `force_console=True`, to the Fusion **Text Commands** window. Errors are always written to the Fusion log file. |
+| `log` | `log(message, level, force_console)` | Writes to the Python console, the Fusion log file (for errors), and the Fusion **Text Commands** window. **All output is gated on `config.DEBUG`** — when `DEBUG` is `False` this is a no-op. `force_console` is retained for backward compatibility but no longer overrides the `DEBUG` gate. |
 | `clipText` | `clipText(linkText)` | Copies a string to the system clipboard. Uses `clip.exe` via `subprocess` on Windows and `pbcopy` via `os.system` on macOS. |
-| `handle_error` | `handle_error(name, show_message_box)` | Logs the current exception traceback at error level. Optionally displays the error in a Fusion message box. |
+| `isSaved` | `isSaved() -> bool` | Returns `True` if the active document is saved; otherwise shows a "Please Save" message box and returns `False`. |
+| `handle_error` | `handle_error(name, show_message_box)` | Logs the current exception traceback via `log()` at error level (so it is also `DEBUG`-gated). Optionally displays the error in a Fusion message box. |
+| `perf_timer` | `perf_timer(label, context)` | Context manager that emits a `[PERF]` timing line when `config.PERF_TRACE` is `True`; zero cost otherwise. |
 
 ### `event_utils.py`
 
@@ -193,6 +202,16 @@ The `lib/fusionAddInUtils/` package provides three shared utilities used by all 
 |---|---|---|
 | `add_handler` | `add_handler(event, callback, *, name, local_handlers)` | Dynamically resolves the correct handler type from the event module, creates a handler instance that calls `callback`, and appends it to either `local_handlers` or the global `_handlers` list to prevent garbage collection. |
 | `clear_handlers` | `clear_handlers()` | Empties the global `_handlers` list, releasing all globally scoped event handlers. Called during add-in stop. |
+
+### Other shared modules (vendored for parity)
+
+| Module | Provides |
+|---|---|
+| `attributes_utils.py` | Attribute enumeration/formatting helpers (`attributes_for_selection`, `get_all_attributes`, `get_comptypes`, `update_feedback_from_list`). |
+| `cache_utils.py` | Project/folder/param-doc JSON cache helpers (Global Parameters domain). |
+| `date_utils.py` | `next_business_day(dt)`, `compute_quick_dates()`. |
+| `log_utils.py` | `default_log_directory()`, `open_live_log_viewer(path)`. |
+| `upload_utils.py` | `wait_for_upload(save_result, context_label, …)` — polls a Fusion save/upload to completion. |
 
 ---
 
@@ -202,7 +221,7 @@ The `lib/fusionAddInUtils/` package provides three shared utilities used by all 
 
 | Constant | Value | Purpose |
 |---|---|---|
-| `DEBUG` | `False` | When `True`, all `futil.log()` calls write to the Fusion **Text Commands** window. Set to `True` during development. |
+| `DEBUG` | `False` | Master logging gate. When `False`, `futil.log()` (and therefore `handle_error()`'s error logging) produces **no output at all** — not to stdout, the Fusion log file, or the **Text Commands** window. Set to `True` during development to enable logging. |
 | `ADDIN_NAME` | Derived from folder name | The add-in's display name. |
 | `COMPANY_NAME` | `"Autodesk"` | Company attribution string. |
 | `design_workspace` | `"FusionSolidEnvironment"` | The Fusion workspace ID used for panel placement. |
@@ -236,10 +255,15 @@ PowerTools-Share-Document/
 │   └── projectMembers/
 │       └── entry.py               # Document Project Members
 ├── lib/
-│   └── fusionAddInUtils/
+│   └── fusionAddInUtils/          # Vendored identically across all 9 PowerTools add-ins
 │       ├── __init__.py
-│       ├── general_utils.py       # log(), clipText(), handle_error()
-│       └── event_utils.py         # add_handler(), clear_handlers()
+│       ├── general_utils.py       # log(), clipText(), isSaved(), handle_error(), perf_timer()
+│       ├── event_utils.py         # add_handler(), clear_handlers()
+│       ├── attributes_utils.py    # attribute enumeration/formatting helpers
+│       ├── cache_utils.py         # project/folder/param-doc JSON cache helpers
+│       ├── date_utils.py          # next_business_day(), compute_quick_dates()
+│       ├── log_utils.py           # default_log_directory(), open_live_log_viewer()
+│       └── upload_utils.py        # wait_for_upload()
 └── docs/
     ├── architecture.md            # This document
     └── commands/

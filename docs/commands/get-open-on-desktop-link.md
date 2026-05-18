@@ -115,7 +115,7 @@ flowchart TD
 
 | API element | Purpose |
 |---|---|
-| `app.activeDocument.isSaved` | Guards against operating on unsaved documents |
+| `futil.isSaved()` | Guards against operating on unsaved documents (checks `app.activeDocument.isSaved`; shows a "Please Save" prompt if not) |
 | `app.activeDocument.dataFile.id` | The document's lineage URN, used as the primary deep-link identifier |
 | `app.activeDocument.dataFile.parentProject.parentHub.fusionWebURL` | The Hub URL encoded into the link so the recipient's client connects to the correct Hub |
 | `app.activeDocument.name` | The document name encoded into the link for display purposes |

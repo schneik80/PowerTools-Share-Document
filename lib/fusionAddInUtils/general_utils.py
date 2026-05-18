@@ -9,20 +9,25 @@
 #  AUTODESK, INC. DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 #  UNINTERRUPTED OR ERROR FREE.
 
-import os, subprocess
+import os
+import subprocess
+import time
 import traceback
+from contextlib import contextmanager
 import adsk.core
 
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-# Attempt to read DEBUG flag from parent config.
+# Attempt to read DEBUG and PERF_TRACE flags from parent config.
 try:
     from ... import config
 
-    DEBUG = config.DEBUG
-except:
+    DEBUG = getattr(config, "DEBUG", False)
+    PERF_TRACE = getattr(config, "PERF_TRACE", False)
+except Exception:
     DEBUG = False
+    PERF_TRACE = False
 
 
 def log(
@@ -32,23 +37,29 @@ def log(
 ):
     """Utility function to easily handle logging in your app.
 
+    All logging is gated on config.DEBUG: stdout, the Fusion log file, and
+    the Fusion Text Commands window are only written when config.DEBUG is
+    True. When DEBUG is False this function is a no-op.
+
     Arguments:
     message -- The message to log.
     level -- The logging severity level.
-    force_console -- Forces the message to be written to the Text Command window.
+    force_console -- Retained for backward compatibility. It no longer
+                     overrides the config.DEBUG gate.
     """
-    # Always print to console, only seen through IDE.
+    # Every log destination below is gated on config.DEBUG.
+    if not DEBUG:
+        return
+
+    # Goes to the attached debugger / IDE stdout only.
     print(message)
 
-    # Log all errors to Fusion log file.
+    # Errors are also persisted to the Fusion log file.
     if level == adsk.core.LogLevels.ErrorLogLevel:
-        log_type = adsk.core.LogTypes.FileLogType
-        app.log(message, level, log_type)
+        app.log(message, level, adsk.core.LogTypes.FileLogType)
 
-    # If config.DEBUG is True write all log messages to the console.
-    if DEBUG or force_console:
-        log_type = adsk.core.LogTypes.ConsoleLogType
-        app.log(message, level, log_type)
+    # User-facing log in the Fusion Text Commands window.
+    app.log(message, level, adsk.core.LogTypes.ConsoleLogType)
 
 
 def clipText(linkText):
@@ -58,10 +69,30 @@ def clipText(linkText):
     linkText -- string to copy to system clipboard.
     """
     if os.name == "nt":
-        subprocess.run(["clip.exe"], input=linkText.strip().encode("utf-8"), check=True, shell=True)
+        subprocess.run(
+            ["clip.exe"], input=linkText.strip().encode("utf-8"), check=True, shell=True
+        )
     else:
         os.system(f'echo "{linkText.strip()}" | pbcopy')
     app.log(f"link: {linkText} was added to clipboard")
+
+
+def isSaved() -> bool:
+    """Utility function to check if the active document has been saved.
+
+    Returns:
+    bool -- True if the active document has been saved, False otherwise.
+    """
+    # Check that the active document has been saved.
+    if not app.activeDocument.isSaved:
+        ui.messageBox(
+            "The active document must be saved before you can continue.",
+            "Please Save",
+            0,
+            2,
+        )
+        return False
+    return True
 
 
 def handle_error(name: str, show_message_box: bool = False):
@@ -80,3 +111,27 @@ def handle_error(name: str, show_message_box: bool = False):
     # If desired you could show an error as a message box.
     if show_message_box:
         ui.messageBox(f"{name}\n{traceback.format_exc()}")
+
+
+@contextmanager
+def perf_timer(label: str, context: str = ""):
+    """Wall-clock timer for diagnosing performance bottlenecks.
+
+    Wraps a block of code and, when config.PERF_TRACE is True, emits a
+    structured [PERF] line to the Fusion Text Command window on exit.
+
+    Usage:
+        with futil.perf_timer("documents.open", "GP._load_from_doc"):
+            params_doc = app.documents.open(data_file, False)
+
+    Has zero runtime cost (no timing overhead, no log write) when PERF_TRACE is False.
+    """
+    if not PERF_TRACE:
+        yield
+        return
+    t0 = time.perf_counter()
+    try:
+        yield
+    finally:
+        elapsed = time.perf_counter() - t0
+        log(f"[PERF] {context:<30} | {label:<35} | {elapsed:.3f} s", force_console=True)
